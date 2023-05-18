@@ -18,7 +18,7 @@ const size = {
  * Scene
  */
 const scene = new THREE.Scene()
-scene.background = new THREE.Color('#222222')
+scene.background = new THREE.Color('#555555')
 
 //======================
 /**
@@ -27,7 +27,7 @@ scene.background = new THREE.Color('#222222')
 const ambientLight = new THREE.AmbientLight('#ffffff', 0.1)
 scene.add(ambientLight)
 
-const directionalLight = new THREE.DirectionalLight('#ffffff', 0.5)
+const directionalLight = new THREE.DirectionalLight('#ffffff', 0.8)
 directionalLight.position.x = 1
 directionalLight.position.y = 1
 directionalLight.position.z = 1
@@ -39,7 +39,7 @@ scene.add(directionalLight)
  */
 const gltfLoader = new GLTFLoader()
 gltfLoader.load(
-  'https://cdn.jsdelivr.net/gh/KennyStanley/ndw/assets/ndw.glb',
+  'https://cdn.jsdelivr.net/gh/KennyStanley/ndw/assets/23.glb',
   result => {
     const model = result.scene
     model.position.set(0, 0, 0)
