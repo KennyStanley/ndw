@@ -103,7 +103,7 @@ gltfLoader.load(
       const y = window.innerHeight * 0.8
       mouseX = (e.clientX / x) * 2 - 1
       mouseY = -(e.clientY / y) * 2 + 1
-      console.log(mouseX, mouseY)
+      //   console.log(mouseX, mouseY)
     })
 
     /**
