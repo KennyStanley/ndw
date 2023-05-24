@@ -1,36 +1,32 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { CSG } from './utils/CSGMesh.js'
 
 /**
  * from dom and window and other objects
  */
 // ====== Canvas
 const canvas = document.querySelector('canvas')
-// ====== Sizes
-const size = {
-  width: window.innerWidth,
-  height: window.innerHeight * 0.8,
-}
 
 //=====================
 /**
  * Scene
  */
 const scene = new THREE.Scene()
-scene.background = new THREE.Color('#555555')
+scene.background = new THREE.Color('#dddddd')
 
 //======================
 /**
  * Lights
  */
-const ambientLight = new THREE.AmbientLight('#ffffff', 0.1)
+const ambientLight = new THREE.AmbientLight('#ffffff', 0.5)
 scene.add(ambientLight)
 
-const directionalLight = new THREE.DirectionalLight('#ffffff', 0.8)
-directionalLight.position.x = 1
-directionalLight.position.y = 1
-directionalLight.position.z = 1
+const directionalLight = new THREE.DirectionalLight('#ffffff', 1)
+directionalLight.position.x = 5.357
+directionalLight.position.y = 0.878
+directionalLight.position.z = 4.743
 scene.add(directionalLight)
 
 //======================
@@ -39,7 +35,8 @@ scene.add(directionalLight)
  */
 const gltfLoader = new GLTFLoader()
 gltfLoader.load(
-  'https://cdn.jsdelivr.net/gh/KennyStanley/ndw/assets/23.glb',
+  'https://cdn.jsdelivr.net/gh/KennyStanleyJr/ndw/assets/23.glb',
+  // '/assets/23.glb',
   result => {
     const model = result.scene
     model.position.set(0, 0, 0)
@@ -52,20 +49,13 @@ gltfLoader.load(
      */
     const camera = new THREE.PerspectiveCamera(
       70,
-      size.width / size.height,
+      window.innerWidth / window.innerHeight,
       0.1,
       100
     )
-    camera.position.y = 0.5
-    camera.position.z = 4
+    camera.position.y = 0.1
+    camera.position.z = 3
     scene.add(camera)
-
-    //======================
-    /**
-     * Controls
-     */
-    // const controls = new OrbitControls(camera, canvas)
-    // controls.enableDamping = true
 
     //======================
     /**
@@ -75,35 +65,18 @@ gltfLoader.load(
       canvas: canvas,
       antialias: true,
     })
-    renderer.setSize(size.width, size.height)
+    renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.render(scene, camera)
     // renderer update
     window.addEventListener('resize', () => {
-      //Update Sizes:
-      size.width = window.innerWidth
-      size.height = window.innerHeight * 0.8
-
       //Camera
-      camera.aspect = size.width / size.height
+      camera.aspect = window.innerWidth / window.innerHeight
       camera.updateProjectionMatrix()
 
       //Update renderer:
-      renderer.setSize(size.width, size.height)
+      renderer.setSize(window.innerWidth, window.innerHeight)
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    })
-
-    //======================
-    // Track mouse position
-    let mouseX = 0
-    let mouseY = 0
-    canvas.addEventListener('mousemove', e => {
-      // Adjust mouse position to normalised device coordinates (-1 to +1)
-      const x = window.innerWidth
-      const y = window.innerHeight * 0.8
-      mouseX = (e.clientX / x) * 2 - 1
-      mouseY = -(e.clientY / y) * 2 + 1
-      //   console.log(mouseX, mouseY)
     })
 
     /**
@@ -118,9 +91,9 @@ gltfLoader.load(
       //   controls.update()
 
       // Move Mesh
-      const magnitude = 0.5
-      model.rotation.x = -mouseY * magnitude
-      model.rotation.y = mouseX * magnitude - Math.PI * 0.5
+      model.rotation.y = -elapsedTime * 0.2 - Math.PI / 4
+      // Hover Mesh
+      model.position.y = Math.sin(elapsedTime) * 0.05
 
       renderer.render(scene, camera)
 
