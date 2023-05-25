@@ -1,6 +1,7 @@
 import * as THREE from 'three'
-// import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+
 /**
  * from dom and window and other objects
  */
@@ -32,18 +33,24 @@ scene.add(directionalLight)
  * Mesh
  */
 const loader = new GLTFLoader()
-const model1Data = await modelLoader(
+const modelConnectedData = await modelLoader(
   'https://cdn.jsdelivr.net/gh/KennyStanleyJr/ndw/assets/23.glb'
 )
+// const modelConnectedData = await modelLoader('/assets/23.glb')
+// const modelDisconnectedData = await modelLoader('/assets/sphere-grid.glb')
 
-const model = model1Data.scene
+const modelConnected = modelConnectedData.scene
+// const modelDisconnected = modelDisconnectedData.scene
 
-model.position.set(0, 0, 0)
-model.rotation.set(0, -Math.PI / 2, 0)
+modelConnected.position.set(0, 0, 0)
+modelConnected.rotation.set(0, -Math.PI / 2, 0)
+// modelDisconnected.position.set(0, 0, 0)
+// modelDisconnected.rotation.set(0, -Math.PI / 2, 0)
 
-model.updateMatrix()
+modelConnected.updateMatrix()
+// modelDisconnected.updateMatrix()
 
-scene.add(model)
+scene.add(modelConnected)
 
 //======================
 /**
@@ -58,6 +65,14 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.y = 0.1
 camera.position.z = 3
 scene.add(camera)
+
+//======================
+/**
+ * Controls
+ */
+// const controls = new OrbitControls(camera, canvas)
+// controls.enableDamping = true
+// controls.dampingFactor = 0.05
 
 //======================
 /**
@@ -90,14 +105,18 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime()
 
   //Update Controls
-  //   controls.update()
+  // controls.update()
 
   // Hover Mesh
-  model.position.y = Math.sin(elapsedTime) * 0.05
+  const yPos = Math.sin(elapsedTime) * 0.05
+  camera.position.y = yPos
+  // modelDisconnected.position.y = yPos
 
   // Rotate Mesh with Scroll
   const scroll = window.scrollY
-  model.rotation.y = Math.sin(scroll * 0.005) * 0.25 - Math.PI / 2
+  const yRot = Math.sin(scroll * 0.005) * 0.25 - Math.PI / 2
+  modelConnected.rotation.y = yRot
+  // modelDisconnected.rotation.y = yRot
 
   renderer.render(scene, camera)
 
